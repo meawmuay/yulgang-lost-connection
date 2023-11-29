@@ -252,7 +252,7 @@ namespace Yulgang_Lost_Connection
                 {
                     if (instanceName != "")
                     {
-                        Log(@"เริ่มจับการรับส่งข้อมูลใน 10 วินาที");
+                        Log(@"เริ่มจับการรับส่งข้อมูลใน 20 วินาที");
 
                         float bytesIO = await GetIOBytesFromInstanceName(instanceName);
 
@@ -263,16 +263,16 @@ namespace Yulgang_Lost_Connection
                         {
                             if (bytesIO > 0)
                             {
-                                Log($"พบการรับส่งข้อมูล {bytesIO} Bytes ใน 10 วินาที");
+                                Log($"พบการรับส่งข้อมูล {bytesIO} Bytes ใน 20 วินาที");
                             }
                             else
                             {
-                                Log(@"ไม่พบการรับส่งข้อมูลใน 10 วินาที");
+                                Log(@"ไม่พบการรับส่งข้อมูลใน 20 วินาที");
 
                                 if (_lineAlreadySentProcess.IndexOf(process.MainWindowHandle) == -1 && _lineNotify != null)
                                 {
                                     Log(@"ส่งแจ้งเตือนไปที่ Line Notify");
-                                    bool sentSuccess = await _lineNotify.send("พบจอ " + process.MainWindowTitle + " ขาดการเชื่อต่อภายใน 10 วินาที กรุณาเช็คที่จอเกมเพื่อความแน่ใจ");
+                                    bool sentSuccess = await _lineNotify.send("พบจอ " + process.MainWindowTitle + " ขาดการเชื่อต่อภายใน 20 วินาที กรุณาเช็คที่จอเกมเพื่อความแน่ใจ");
                                     if (sentSuccess)
                                     {
                                         _lineAlreadySentProcess.Add(process.MainWindowHandle);
@@ -345,7 +345,7 @@ namespace Yulgang_Lost_Connection
 
             _botWorking = false;
         }
-        private async Task<float> GetIOBytesFromInstanceName(string instanceName, int seconds = 10)
+        private async Task<float> GetIOBytesFromInstanceName(string instanceName, int seconds = 20)
         {
             return await Task.Run(() =>
             {

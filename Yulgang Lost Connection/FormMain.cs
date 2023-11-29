@@ -252,7 +252,7 @@ namespace Yulgang_Lost_Connection
                 {
                     if (instanceName != "")
                     {
-                        Log(@"เริ่มจับการรับส่งข้อมูลใน 20 วินาที");
+                        Log(@"เริ่มจับการรับส่งข้อมูลภายใน 30 วินาที");
 
                         float bytesIO = await GetIOBytesFromInstanceName(instanceName);
 
@@ -263,16 +263,16 @@ namespace Yulgang_Lost_Connection
                         {
                             if (bytesIO > 0)
                             {
-                                Log($"พบการรับส่งข้อมูล {bytesIO} Bytes ใน 20 วินาที");
+                                Log($"พบการรับส่งข้อมูล {bytesIO} Bytes");
                             }
                             else
                             {
-                                Log(@"ไม่พบการรับส่งข้อมูลใน 20 วินาที");
+                                Log(@"ไม่พบการรับส่งข้อมูลภายใน 30 วินาที");
 
                                 if (_lineAlreadySentProcess.IndexOf(process.MainWindowHandle) == -1 && _lineNotify != null)
                                 {
                                     Log(@"ส่งแจ้งเตือนไปที่ Line Notify");
-                                    bool sentSuccess = await _lineNotify.send("พบจอ " + process.MainWindowTitle + " ขาดการเชื่อต่อภายใน 20 วินาที กรุณาเช็คที่จอเกมเพื่อความแน่ใจ");
+                                    bool sentSuccess = await _lineNotify.send("พบจอ " + process.MainWindowTitle + " ขาดการเชื่อต่อภายใน 30 วินาที กรุณาเช็คที่จอเกมเพื่อความแน่ใจ");
                                     if (sentSuccess)
                                     {
                                         _lineAlreadySentProcess.Add(process.MainWindowHandle);
@@ -287,7 +287,7 @@ namespace Yulgang_Lost_Connection
                                 {
                                     Log(@"ได้ส่งการแจ้งเตือนไปแล้ว ข้ามการส่งแจ้งเตือนหน้าจอนี้");
                                 }
-                                else if (_lineNotify != null)
+                                else if (_lineNotify == null)
                                 {
                                     Log(@"ไม่ได้ตั้งค่า Line Notify ข้ามการส่งแจ้งเตือนหน้าจอนี้");
                                 }
@@ -345,7 +345,7 @@ namespace Yulgang_Lost_Connection
 
             _botWorking = false;
         }
-        private async Task<float> GetIOBytesFromInstanceName(string instanceName, int seconds = 20)
+        private async Task<float> GetIOBytesFromInstanceName(string instanceName, int seconds = 30)
         {
             return await Task.Run(() =>
             {
@@ -379,6 +379,12 @@ namespace Yulgang_Lost_Connection
                     Debug.WriteLine($"Bytes IO/sec: {bytesIOPerSec}");
 
                     bytesIOAll += bytesIOPerSec;
+
+                    //if found IO bytes > 0 break loop
+                    if(bytesIOAll > 0)
+                    {
+                        break;
+                    }
                 }
 
 
